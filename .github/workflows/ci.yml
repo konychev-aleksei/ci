@@ -2,12 +2,12 @@ name: Frontend CI
 
 on:
   push:
-    branches-ignore:
-      - main # исключаем main для light CI
+    branches:
+      - "**" # разрешаем push на все ветки
   pull_request:
     branches:
       - "**"
-  workflow_dispatch: # для ручного запуска Release
+  workflow_dispatch:
 
 jobs:
   light-ci:
