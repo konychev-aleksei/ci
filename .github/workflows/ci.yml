@@ -3,11 +3,14 @@ name: Frontend CI
 on:
   push:
     branches:
-      - "**" # разрешаем push на все ветки
+      - "**"
   pull_request:
     branches:
       - "**"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   light-ci:
@@ -109,6 +112,8 @@ jobs:
           git config user.email "github-actions@github.com"
           git tag $TAG_NAME
           git push origin $TAG_NAME
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
