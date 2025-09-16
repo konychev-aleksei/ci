@@ -1,4 +1,4 @@
 export const sum = (a: number, b: number) => {
-  // some comment
+  // some comment 2
   return a + b;
 };
