@@ -38,27 +38,35 @@ jobs:
       - name: Run Jest on changed files
         if: steps.changed-files.outputs.all_changed_files != ''
         run: |
+          # Получаем все изменённые исходники
           CHANGED=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -E '\.(ts|tsx|js|jsx)$')
 
-          TEST_FILES=""
-          for FILE in $CHANGED; do
-            DIR=$(dirname $FILE)
-            BASENAME=$(basename $FILE .ts)
-            if [ -f "$DIR/$BASENAME.test.ts" ]; then
-              TEST_FILES="$TEST_FILES $DIR/$BASENAME.test.ts"
-            elif [ -f "$DIR/$BASENAME.test.tsx" ]; then
-              TEST_FILES="$TEST_FILES $DIR/$BASENAME.test.tsx"
-            fi
-          done
+          if [ -n "$CHANGED" ]; then
+            echo "Looking for test files next to changed sources..."
+            TEST_FILES=""
+            for FILE in $CHANGED; do
+              DIR=$(dirname $FILE)
+              BASENAME=$(basename $FILE .ts)
+              # проверяем .test.ts
+              if [ -f "$DIR/$BASENAME.test.ts" ]; then
+                TEST_FILES="$TEST_FILES $DIR/$BASENAME.test.ts"
+              fi
+              # проверяем .test.tsx
+              if [ -f "$DIR/$BASENAME.test.tsx" ]; then
+                TEST_FILES="$TEST_FILES $DIR/$BASENAME.test.tsx"
+              fi
+            done
 
-          if [ -n "$TEST_FILES" ]; then
-            echo "Running Jest on test files:"
-            echo "$TEST_FILES"
-            npx jest $TEST_FILES --passWithNoTests
+            if [ -n "$TEST_FILES" ]; then
+              echo "Running Jest on test files:"
+              echo "$TEST_FILES"
+              npx jest $TEST_FILES --passWithNoTests
+            else
+              echo "No test files next to sources, running related tests via Jest"
+              npx jest --findRelatedTests $CHANGED --passWithNoTests
+            fi
           else
-            echo "No test files found, running related tests via Jest"
-            npx jest --findRelatedTests $CHANGED --passWithNoTests
-          fi
+            echo "No testable files changed."
 
   heavy-ci:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
