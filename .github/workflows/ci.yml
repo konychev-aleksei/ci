@@ -40,11 +40,11 @@ jobs:
         run: |
           TEST_FILES=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -E '\.test\.(ts|tsx)$')
 
-          echo "TEST_FILES"
+          echo "$TEST_FILES"
 
           if [ -n "$TEST_FILES" ]; then
             echo "Running Jest on changed test files:"
-            npx jest $TEST_FILES --passWithNoTests
+            npx jest --findRelatedTests $TEST_FILES --passWithNoTests
           else
             echo "No test files changed."
           fi
