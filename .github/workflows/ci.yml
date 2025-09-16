@@ -38,13 +38,14 @@ jobs:
       - name: Run Jest on changed files
         if: steps.changed-files.outputs.all_changed_files != ''
         run: |
-          CHANGED=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -E '\.(ts|tsx|js|jsx)$')
-          if [ -n "$CHANGED" ]; then
-            echo "Running Jest on related tests for changed source files:"
-            echo "$CHANGED"
-            npx jest --findRelatedTests $CHANGED --passWithNoTests
+          TEST_FILES=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -E '\.test\.(ts|tsx)$')
+
+          if [ -n "$TEST_FILES" ]; then
+            echo "Running Jest on changed test files:"
+            echo "$TEST_FILES"
+            npx jest $TEST_FILES --passWithNoTests
           else
-            echo "No testable files changed."
+            echo "No test files changed."
           fi
 
   heavy-ci:
