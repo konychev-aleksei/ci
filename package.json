@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "e2e": "npx run playwright"
   },
   "dependencies": {
     "@babel/preset-react": "^7.27.1",
