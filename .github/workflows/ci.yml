@@ -38,6 +38,8 @@ jobs:
       - name: Run Jest on changed files
         if: steps.changed-files.outputs.all_changed_files != ''
         run: |
+          echo 1
+
           TEST_FILES=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -E '\.test\.(ts|tsx)$')
 
           echo "$TEST_FILES"
