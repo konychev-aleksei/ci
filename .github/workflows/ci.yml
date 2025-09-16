@@ -1,17 +1,17 @@
 name: Frontend CI
 
 on:
+  push:
+    branches-ignore:
+      - main # исключаем main для light CI
   pull_request:
     branches:
       - "**"
-  push:
-    branches:
-      - main
   workflow_dispatch: # для ручного запуска Release
 
 jobs:
   light-ci:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref != 'refs/heads/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
