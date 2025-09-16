@@ -50,7 +50,7 @@ jobs:
 
           if [ -n "$TEST_FILES" ]; then
             echo "Running Jest on changed test files..."
-            npx jest $TEST_FILES --findRelatedTests --passWithNoTests || true
+            npx jest $TEST_FILES --findRelatedTests --passWithNoTests
           else
             echo "No test files changed."
           fi
