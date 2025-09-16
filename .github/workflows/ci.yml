@@ -106,7 +106,7 @@ jobs:
       - name: Create release tag
         id: create_tag
         run: |
-          TAG_NAME="release/$(date -u +'%Y%m%d%H%M%S')"
+          TAG_NAME="release/$(date -u +'%Y%m%d%H%M%S%3N')"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
