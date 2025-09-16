@@ -38,12 +38,26 @@ jobs:
       - name: Run Jest on changed files
         if: steps.changed-files.outputs.all_changed_files != ''
         run: |
-          if [ -n "$CHANGED" ]; then
-            echo "Running Jest on related tests for changed source files:"
-            echo "$CHANGED"
-            npx jest --findRelatedTests $CHANGED --passWithNoTests
+          CHANGED=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -E '\.(ts|tsx|js|jsx)$')
+
+          TEST_FILES=""
+          for FILE in $CHANGED; do
+            DIR=$(dirname $FILE)
+            BASENAME=$(basename $FILE .ts)
+            if [ -f "$DIR/$BASENAME.test.ts" ]; then
+              TEST_FILES="$TEST_FILES $DIR/$BASENAME.test.ts"
+            elif [ -f "$DIR/$BASENAME.test.tsx" ]; then
+              TEST_FILES="$TEST_FILES $DIR/$BASENAME.test.tsx"
+            fi
+          done
+
+          if [ -n "$TEST_FILES" ]; then
+            echo "Running Jest on test files:"
+            echo "$TEST_FILES"
+            npx jest $TEST_FILES --passWithNoTests
           else
-            echo "No testable files changed."
+            echo "No test files found, running related tests via Jest"
+            npx jest --findRelatedTests $CHANGED --passWithNoTests
           fi
 
   heavy-ci:
