@@ -69,6 +69,12 @@ jobs:
       - name: Run Jest (all tests)
         run: npx jest --coverage
 
+      - name: Build project (Vite + React)
+        run: npm run build
+
+      - name: Run E2E tests
+        run: npm run e2e
+
   release:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
