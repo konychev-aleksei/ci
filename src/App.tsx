@@ -1,7 +1,7 @@
 import { sum } from "./sum";
 
 function App() {
-  // lol
+  // lol lol
   return <>{sum(1, 2)}</>;
 }
 
